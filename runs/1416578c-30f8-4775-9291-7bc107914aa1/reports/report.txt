@@ -1,0 +1,112 @@
+IMAGE DATASET ANALYSIS REPORT
+=======================================================
+
+CLASS: .git
+----------------------------------------
+Valid images: 0
+Invalid images: 0
+Duplicates skipped: 0
+Unsupported files: 5
+Processed images: 0
+
+CLASS: .idea
+----------------------------------------
+Valid images: 0
+Invalid images: 0
+Duplicates skipped: 0
+Unsupported files: 6
+Processed images: 0
+
+CLASS: .venv
+----------------------------------------
+Valid images: 0
+Invalid images: 0
+Duplicates skipped: 0
+Unsupported files: 3
+Processed images: 0
+
+CLASS: data
+----------------------------------------
+Valid images: 0
+Invalid images: 0
+Duplicates skipped: 0
+Unsupported files: 0
+Processed images: 0
+
+CLASS: models
+----------------------------------------
+Valid images: 0
+Invalid images: 0
+Duplicates skipped: 0
+Unsupported files: 1
+Processed images: 0
+
+CLASS: original_version
+----------------------------------------
+Valid images: 0
+Invalid images: 0
+Duplicates skipped: 0
+Unsupported files: 1
+Processed images: 0
+
+CLASS: processed_data
+----------------------------------------
+Valid images: 0
+Invalid images: 0
+Duplicates skipped: 0
+Unsupported files: 0
+Processed images: 0
+
+CLASS: processed_data_improved
+----------------------------------------
+Valid images: 0
+Invalid images: 0
+Duplicates skipped: 0
+Unsupported files: 0
+Processed images: 0
+
+CLASS: reports
+----------------------------------------
+Valid images: 0
+Invalid images: 0
+Duplicates skipped: 0
+Unsupported files: 5
+Processed images: 0
+
+CLASS: scripts
+----------------------------------------
+Valid images: 0
+Invalid images: 0
+Duplicates skipped: 0
+Unsupported files: 1
+Processed images: 0
+
+DATASET SUMMARY
+=======================================================
+Total Valid: 0
+Total Invalid: 0
+Total Duplicates: 0
+Total Unsupported: 22
+Total Processed: 0
+Class Balance: Imbalanced
+Class Balance Ratio: None
+Total Quality Flags: 0
+Dataset Status: No images were successfully processed.
+
+IMAGE QUALITY ISSUES
+Low resolution: 0
+Too dark: 0
+Too bright: 0
+Potentially blurry: 0
+
+RECOMMENDATIONS
+- Check unsupported files if they are intended to be images.
+- Consider adding more images to the smaller classes to improve class balance.
+
+SIMILARITY ANALYSIS
+Status: not_run
+Similar pairs: 0
+Message: Not enough images for similarity analysis.
+
+IMAGE AUDIT SUMMARY
+Total audited files: 22

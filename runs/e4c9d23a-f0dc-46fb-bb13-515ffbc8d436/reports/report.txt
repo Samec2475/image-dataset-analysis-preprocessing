@@ -1,0 +1,50 @@
+IMAGE DATASET ANALYSIS REPORT
+=======================================================
+
+CLASS: cats
+----------------------------------------
+Valid images: 94
+Invalid images: 2
+Duplicates skipped: 2
+Unsupported files: 0
+Processed images: 94
+
+CLASS: dogs
+----------------------------------------
+Valid images: 180
+Invalid images: 2
+Duplicates skipped: 3
+Unsupported files: 0
+Processed images: 180
+
+DATASET SUMMARY
+=======================================================
+Total Valid: 274
+Total Invalid: 4
+Total Duplicates: 5
+Total Unsupported: 0
+Total Processed: 274
+Class Balance: Imbalanced
+Class Balance Ratio: 1.91
+Total Quality Flags: 27
+Dataset Status: Review recommended.
+
+IMAGE QUALITY ISSUES
+Low resolution: 0
+Too dark: 2
+Too bright: 1
+Potentially blurry: 24
+
+RECOMMENDATIONS
+- Review the corrupted images that were skipped.
+- Review duplicate images to reduce unnecessary redundancy.
+- Consider adding more images to the smaller classes to improve class balance.
+- Review images flagged for potential quality issues.
+
+SIMILARITY ANALYSIS
+Status: skipped
+Similar pairs: 0
+Message: PyTorch or TorchVision is not installed.
+
+IMAGE AUDIT SUMMARY
+Total audited files: 283

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DataLens — Dataset Analysis & Preprocessing</title>
+  <meta name="description" content="Validate, preprocess and analyse your image dataset for AI applications." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+          </svg>
+        </div>
+        DataLens
+      </div>
+      <span class="nav-tag">Dataset Analysis Pipeline</span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-strip">
+    <div class="container">
+      <h1>Image Dataset Analysis &amp; Preprocessing</h1>
+      <p>Upload a ZIP or point to a local folder — validate images, detect duplicates, run quality checks, and generate a preprocessed dataset ready for AI training.</p>
+      <div class="feature-pills">
+        <span>✔ Integrity checks</span>
+        <span>✔ Duplicate detection</span>
+        <span>✔ Quality analysis</span>
+        <span>✔ 128×128 preprocessing</span>
+        <span>✔ Similarity analysis</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEPPER -->
+  <div class="stepper-bar">
+    <div class="container">
+      <div class="stepper">
+        <div class="stepper-item active" id="stepper-1">
+          <div class="stepper-circle">1</div>
+          <span>Select Dataset</span>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-item" id="stepper-2">
+          <div class="stepper-circle">2</div>
+          <span>Run Pipeline</span>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-item" id="stepper-3">
+          <div class="stepper-circle">3</div>
+          <span>View Results</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="container main-content">
+
+    <!-- ════════ STEP 1 ════════ -->
+    <section id="source-section" class="card">
+      <div class="card-header">
+        <h2>Select Your Dataset</h2>
+        <p>Choose a local folder accessible by the server, or upload a ZIP archive.</p>
+      </div>
+
+      <!-- Source tabs -->
+      <div class="segment-control">
+        <button id="tab-folder" class="seg-btn active" onclick="switchTab('folder')">
+          <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>
+          Local Folder
+        </button>
+        <button id="tab-zip" class="seg-btn" onclick="switchTab('zip')">
+          <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z" clip-rule="evenodd"/></svg>
+          Upload ZIP
+        </button>
+      </div>
+
+      <!-- Folder panel -->
+      <div id="panel-folder" class="src-panel">
+        <div class="radio-group">
+          <label class="radio-card" id="mode-default-label">
+            <input type="radio" name="folder-mode" id="mode-default" value="default" checked onchange="onFolderModeChange()" />
+            <div class="radio-card-body">
+              <div class="radio-title">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>
+                Default <code>data/</code> folder
+              </div>
+              <div class="radio-desc">Use the <code>data/</code> folder located next to <code>app.py</code></div>
+            </div>
+            <div class="radio-dot"></div>
+          </label>
+
+          <label class="radio-card" id="mode-custom-label">
+            <input type="radio" name="folder-mode" id="mode-custom" value="custom" onchange="onFolderModeChange()" />
+            <div class="radio-card-body">
+              <div class="radio-title">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4l2 2h6a2 2 0 012 2v1H8a3 3 0 00-3 3v1.5a1.5 1.5 0 01-3 0V6z" clip-rule="evenodd"/><path d="M6 12a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4z"/></svg>
+                Custom folder path
+              </div>
+              <div class="radio-desc">Enter any absolute path accessible on this machine</div>
+            </div>
+            <div class="radio-dot"></div>
+          </label>
+        </div>
+
+        <div id="custom-path-row" class="path-input-row" style="display:none;">
+          <div class="input-with-btn">
+            <input type="text" id="folder-path" class="text-input" placeholder="e.g. C:\Users\you\my_dataset" onkeydown="if(event.key==='Enter') previewFolder()" />
+            <button class="btn btn-secondary" onclick="previewFolder()">Preview Classes</button>
+          </div>
+        </div>
+
+        <div id="folder-preview" class="info-box" style="display:none;"></div>
+        <div id="folder-error"  class="error-box" style="display:none;"></div>
+      </div>
+
+      <!-- ZIP panel -->
+      <div id="panel-zip" class="src-panel" style="display:none;">
+        <div id="drop-zone" class="dropzone" tabindex="0"
+             onclick="document.getElementById('zip-input').click()"
+             ondragover="event.preventDefault(); this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="this.classList.remove('drag-over'); onDrop(event)">
+          <div class="dropzone-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M16 10l-4-4-4 4M12 6v10" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="dropzone-title">Drop your <strong>.zip</strong> file here</p>
+          <p class="dropzone-sub">or click to browse files</p>
+          <p class="dropzone-hint">Expected: <code>dataset.zip → class_folder/ → images</code></p>
+          <input type="file" id="zip-input" accept=".zip" hidden onchange="uploadZip(this.files[0])" />
+        </div>
+
+        <div id="upload-status" class="upload-status" style="display:none;">
+          <div class="upload-status-inner">
+            <span class="spinner"></span>
+            <span id="upload-status-text">Uploading…</span>
+          </div>
+        </div>
+
+        <div id="zip-preview"  class="info-box"  style="display:none;"></div>
+        <div id="zip-error"    class="error-box" style="display:none;"></div>
+      </div>
+
+      <!-- Options -->
+      <div class="options-section">
+        <h3 class="options-label">Options</h3>
+        <label class="checkbox-row">
+          <input type="checkbox" id="run-similarity" class="checkbox-input" />
+          <div class="checkbox-text">
+            <strong>Run similarity analysis</strong>
+            <span class="badge badge-orange">Requires PyTorch</span>
+            <br/><small>Detects visually similar image pairs using MobileNetV2 — may take several minutes on large datasets.</small>
+          </div>
+        </label>
+      </div>
+
+      <div class="card-footer">
+        <button id="analyze-btn" class="btn btn-primary btn-lg" onclick="startAnalysis()" disabled>
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/></svg>
+          Run Analysis
+        </button>
+        <span id="analyze-hint" class="hint-text">Select or upload a dataset to begin</span>
+      </div>
+    </section>
+
+    <!-- ════════ STEP 2 ════════ -->
+    <section id="progress-section" class="card" style="display:none;">
+      <div class="card-header">
+        <h2>Pipeline Running</h2>
+        <p>Your dataset is being processed. This may take a moment depending on its size.</p>
+      </div>
+
+      <div class="pipeline-track">
+        <div class="pipeline-step" id="pstep-validating">
+          <div class="ps-icon">🔍</div>
+          <div class="ps-body">
+            <strong>Validating</strong>
+            <span>Checking file integrity &amp; detecting duplicates</span>
+          </div>
+          <div class="ps-state" id="pst-validating"></div>
+        </div>
+        <div class="pipeline-step" id="pstep-processing">
+          <div class="ps-icon">⚙️</div>
+          <div class="ps-body">
+            <strong>Processing</strong>
+            <span>Resizing &amp; normalising images to 128×128</span>
+          </div>
+          <div class="ps-state" id="pst-processing"></div>
+        </div>
+        <div class="pipeline-step" id="pstep-similarity">
+          <div class="ps-icon">🧠</div>
+          <div class="ps-body">
+            <strong>Similarity Analysis</strong>
+            <span>MobileNetV2 feature comparison</span>
+          </div>
+          <div class="ps-state" id="pst-similarity"></div>
+        </div>
+        <div class="pipeline-step" id="pstep-reports">
+          <div class="ps-icon">📊</div>
+          <div class="ps-body">
+            <strong>Reports &amp; Charts</strong>
+            <span>Generating manifests, CSVs and visualisations</span>
+          </div>
+          <div class="ps-state" id="pst-reports"></div>
+        </div>
+      </div>
+
+      <div class="log-section">
+        <div class="log-header">
+          <span>Live Output</span>
+          <span id="log-count" class="log-line-count">0 lines</span>
+        </div>
+        <div id="log-output" class="log-output"></div>
+      </div>
+
+      <div class="card-footer">
+        <button class="btn btn-ghost" onclick="cancelRun()">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ════════ STEP 3 ════════ -->
+    <section id="results-section" class="card" style="display:none;">
+      <div class="results-header">
+        <div>
+          <h2>Analysis Results</h2>
+          <p id="results-subtitle" class="text-muted"></p>
+        </div>
+        <div class="results-header-right">
+          <span id="dataset-status-badge" class="status-badge"></span>
+          <button class="btn btn-secondary" onclick="newAnalysis()">↩ New Analysis</button>
+        </div>
+      </div>
+
+      <!-- Metric cards -->
+      <div class="metrics-grid">
+        <div class="metric-card mc-green">
+          <div class="mc-icon">✅</div>
+          <div class="mc-val" id="m-valid">—</div>
+          <div class="mc-lbl">Valid Images</div>
+        </div>
+        <div class="metric-card mc-red">
+          <div class="mc-icon">❌</div>
+          <div class="mc-val" id="m-invalid">—</div>
+          <div class="mc-lbl">Invalid / Corrupt</div>
+        </div>
+        <div class="metric-card mc-yellow">
+          <div class="mc-icon">🔁</div>
+          <div class="mc-val" id="m-duplicates">—</div>
+          <div class="mc-lbl">Duplicates</div>
+        </div>
+        <div class="metric-card mc-orange">
+          <div class="mc-icon">🔎</div>
+          <div class="mc-val" id="m-quality">—</div>
+          <div class="mc-lbl">Quality Flags</div>
+        </div>
+        <div class="metric-card mc-blue">
+          <div class="mc-icon">⚡</div>
+          <div class="mc-val" id="m-processed">—</div>
+          <div class="mc-lbl">Processed</div>
+        </div>
+        <div class="metric-card mc-purple">
+          <div class="mc-icon">👯</div>
+          <div class="mc-val" id="m-similar">—</div>
+          <div class="mc-lbl">Similar Pairs</div>
+        </div>
+      </div>
+
+      <!-- Result tabs -->
+      <div class="tab-nav">
+        <button class="tab-nav-btn active" onclick="switchResultTab('overview')">Overview</button>
+        <button class="tab-nav-btn" onclick="switchResultTab('quality')">Quality</button>
+        <button class="tab-nav-btn" onclick="switchResultTab('audit')">Audit Table</button>
+        <button class="tab-nav-btn" onclick="switchResultTab('similarity')">Similarity</button>
+        <button class="tab-nav-btn" onclick="switchResultTab('recs')">Recommendations</button>
+      </div>
+
+      <!-- TAB: Overview -->
+      <div id="rtab-overview" class="rtab-panel">
+        <div class="tab-section">
+          <h3 class="tab-section-title">Class Summary</h3>
+          <div id="class-table-wrap"></div>
+        </div>
+        <div class="tab-section">
+          <h3 class="tab-section-title">Charts</h3>
+          <div id="charts-overview" class="chart-grid"></div>
+        </div>
+      </div>
+
+      <!-- TAB: Quality -->
+      <div id="rtab-quality" class="rtab-panel" style="display:none;">
+        <div class="tab-section">
+          <h3 class="tab-section-title">Quality Issue Counts</h3>
+          <table class="data-table" style="max-width:420px;">
+            <thead><tr><th>Issue</th><th>Count</th></tr></thead>
+            <tbody id="quality-tbody"></tbody>
+          </table>
+        </div>
+        <div class="tab-section">
+          <h3 class="tab-section-title">Charts</h3>
+          <div id="charts-quality" class="chart-grid"></div>
+        </div>
+      </div>
+
+      <!-- TAB: Audit Table -->
+      <div id="rtab-audit" class="rtab-panel" style="display:none;">
+        <div class="table-toolbar">
+          <div class="toolbar-left">
+            <div class="search-box">
+              <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+              <input type="text" id="audit-search" placeholder="Search filename, class, issues…" oninput="renderAuditTable()" />
+            </div>
+            <select id="audit-filter-status" class="select-input" onchange="renderAuditTable()">
+              <option value="">All statuses</option>
+              <option value="Valid">Valid</option>
+              <option value="Invalid">Invalid</option>
+              <option value="Duplicate">Duplicate</option>
+              <option value="Unsupported">Unsupported</option>
+            </select>
+            <select id="audit-filter-class" class="select-input" onchange="renderAuditTable()">
+              <option value="">All classes</option>
+            </select>
+          </div>
+          <span id="audit-count" class="audit-count-badge"></span>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table" id="audit-table">
+            <thead>
+              <tr>
+                <th>Class</th><th>Filename</th><th>Status</th>
+                <th>Width</th><th>Height</th><th>Brightness</th>
+                <th>Sharpness</th><th>Issues</th><th>Processed</th>
+              </tr>
+            </thead>
+            <tbody id="audit-tbody"></tbody>
+          </table>
+        </div>
+        <div id="audit-pagination" class="pagination"></div>
+      </div>
+
+      <!-- TAB: Similarity -->
+      <div id="rtab-similarity" class="rtab-panel" style="display:none;">
+        <div id="similarity-content" class="tab-section"></div>
+      </div>
+
+      <!-- TAB: Recommendations -->
+      <div id="rtab-recs" class="rtab-panel" style="display:none;">
+        <div id="recs-content" class="tab-section"></div>
+      </div>
+
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <span>DataLens &mdash; Image Dataset Analysis Pipeline</span>
+      <span>Made by TYCORE305</span>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

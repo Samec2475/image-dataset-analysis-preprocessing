@@ -1,0 +1,11 @@
+Class,Valid,Invalid,Duplicates,Unsupported,Processed
+.git,0,0,0,5,0
+.idea,0,0,0,6,0
+.venv,0,0,0,3,0
+data,0,0,0,0,0
+models,0,0,0,1,0
+original_version,0,0,0,1,0
+processed_data,0,0,0,0,0
+processed_data_improved,0,0,0,0,0
+reports,0,0,0,5,0
+scripts,0,0,0,1,0
