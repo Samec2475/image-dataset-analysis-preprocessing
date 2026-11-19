@@ -129,13 +129,66 @@ def _resolve_dataset_path(path):
     return path
 
 
+SUPPORTED_FORMATS = (".jpg", ".jpeg", ".png")
+
+
 def _list_classes(directory):
+    """Return sorted sub-folder names inside directory (class folders)."""
     if not os.path.isdir(directory):
         return []
     return sorted([
         f for f in os.listdir(directory)
         if os.path.isdir(os.path.join(directory, f))
+          and not f.startswith("__")   # ignore __MACOSX etc.
+          and not f.startswith(".")    # ignore hidden folders
     ])
+
+
+def _folder_has_images(directory):
+    """Return True if directory directly contains at least one image file."""
+    try:
+        return any(
+            f.lower().endswith(SUPPORTED_FORMATS)
+            for f in os.listdir(directory)
+            if os.path.isfile(os.path.join(directory, f))
+        )
+    except OSError:
+        return False
+
+
+def _find_dataset_root(base_dir):
+    """
+    Walk up to 2 levels deep to find the directory whose sub-folders
+    contain image files — that is the dataset root (class-level parent).
+
+    Handles all common ZIP structures:
+      zip → cats/ + dogs/ → images          (base_dir is root)
+      zip → dataset/ → cats/ + dogs/ → images  (one level nested)
+      zip → dataset/ → images                  (single class, flat)
+    """
+    def classes_with_images(d):
+        """Sub-folders of d that actually contain image files."""
+        return [
+            sub for sub in os.listdir(d)
+            if not sub.startswith("__") and not sub.startswith(".")
+            and os.path.isdir(os.path.join(d, sub))
+            and _folder_has_images(os.path.join(d, sub))
+        ]
+
+    # Level 0 — base_dir itself has class folders with images
+    if classes_with_images(base_dir):
+        return base_dir
+
+    # Level 1 — one folder deep (e.g. zip wraps everything in a single folder)
+    for entry in sorted(os.listdir(base_dir)):
+        candidate = os.path.join(base_dir, entry)
+        if entry.startswith("__") or entry.startswith("."):
+            continue
+        if os.path.isdir(candidate) and classes_with_images(candidate):
+            return candidate
+
+    # Fallback — return base_dir and let the pipeline report the error
+    return base_dir
 
 
 # ---------------------------------------------------------------------------
@@ -194,34 +247,43 @@ def api_upload():
 
         os.remove(zip_path)
 
-        # Auto-detect where the class folders are.
-        # Handles: zip/class/images  OR  zip/dataset_folder/class/images
-        data_path = extract_dir
-        top_entries = [
-            e for e in os.listdir(extract_dir)
-            if os.path.isdir(os.path.join(extract_dir, e))
-        ]
+        # Debug: print what was extracted
+        print("\n--- ZIP EXTRACTION DEBUG ---")
+        for root, dirs, files in os.walk(extract_dir):
+            level = root.replace(extract_dir, "").count(os.sep)
+            indent = "  " * level
+            print(f"{indent}{os.path.basename(root)}/")
+            for f in files[:5]:
+                print(f"{indent}  {f}")
+        print("----------------------------\n")
 
-        if len(top_entries) == 1:
-            candidate = os.path.join(extract_dir, top_entries[0])
-            sub = os.listdir(candidate)
-            if sub and all(os.path.isdir(os.path.join(candidate, e)) for e in sub):
-                data_path = candidate
+        # Intelligently find the directory that contains the class folders
+        data_path = _find_dataset_root(extract_dir)
+        classes   = _list_classes(data_path)
 
-        classes = _list_classes(data_path)
+        print(f"Detected data_path: {data_path}")
+        print(f"Detected classes:   {classes}")
 
         if not classes:
+            found = []
+            for root, dirs, files in os.walk(extract_dir):
+                for d in dirs:
+                    found.append(os.path.relpath(os.path.join(root, d), extract_dir))
             shutil.rmtree(extract_dir, ignore_errors=True)
+            detail = f"Folders inside ZIP: {found[:10]}" if found else "ZIP appears empty."
             return jsonify({
-                "error": "No class sub-folders found inside the ZIP. "
-                         "Expected structure: zip → class_folder/ → images"
+                "error": (
+                    "No class sub-folders with images were found. "
+                    "Expected: cats/ and dogs/ folders containing images. "
+                    f"({detail})"
+                )
             }), 400
 
         return jsonify({
             "upload_id": upload_id,
             "data_path": data_path,
-            "classes": classes,
-            "error": None
+            "classes":   classes,
+            "error":     None
         })
 
     except zipfile.BadZipFile:
@@ -333,4 +395,4 @@ def api_chart(run_id, chart_name):
 
 if __name__ == "__main__":
     print("Starting DataLens server on http://localhost:5000")
-    app.run(debug=True, port=5000, use_reloader=False)
+    app.run(debug=True, host="127.0.0.1", port=5000, use_reloader=False)

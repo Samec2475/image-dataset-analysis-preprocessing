@@ -58,15 +58,8 @@ function setStepperState(step) {
 }
 
 // ─── Folder mode ──────────────────────────────────────────────
-function onFolderModeChange() {
-  const mode = document.querySelector('input[name="folder-mode"]:checked').value;
-  const row  = document.getElementById("custom-path-row");
-  row.style.display = mode === "custom" ? "" : "none";
-  resolvedDataPath  = "";
-  hide("folder-preview"); hide("folder-error");
-  setReady(false);
-  if (mode === "default") previewFolder("data");
-}
+function onFolderModeChange() {}
+
 
 function previewFolder(pathOverride) {
   const path = pathOverride || (document.getElementById("folder-path").value || "").trim();
@@ -445,8 +438,6 @@ function backToSource() {
   hide("results-section");
   show("source-section");
   setStepperState(1);
-  document.getElementById("mode-default").checked = true;
-  onFolderModeChange();
 }
 
 // ─── Escape HTML ──────────────────────────────────────────────
@@ -461,12 +452,5 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("folder-path")
     ?.addEventListener("keydown", e => { if (e.key === "Enter") previewFolder(); });
 
-  // Wire up upload-status text span
-  const us = document.getElementById("upload-status");
-  if (us && !us.querySelector("#upload-status-text")) {
-    us.innerHTML = `<div class="upload-status-inner"><span class="spinner"></span><span id="upload-status-text">Uploading…</span></div>`;
-  }
-
   setStepperState(1);
-  onFolderModeChange(); // auto-preview data/ folder
 });

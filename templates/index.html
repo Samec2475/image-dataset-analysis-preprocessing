@@ -89,33 +89,8 @@
 
       <!-- Folder panel -->
       <div id="panel-folder" class="src-panel">
-        <div class="radio-group">
-          <label class="radio-card" id="mode-default-label">
-            <input type="radio" name="folder-mode" id="mode-default" value="default" checked onchange="onFolderModeChange()" />
-            <div class="radio-card-body">
-              <div class="radio-title">
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>
-                Default <code>data/</code> folder
-              </div>
-              <div class="radio-desc">Use the <code>data/</code> folder located next to <code>app.py</code></div>
-            </div>
-            <div class="radio-dot"></div>
-          </label>
-
-          <label class="radio-card" id="mode-custom-label">
-            <input type="radio" name="folder-mode" id="mode-custom" value="custom" onchange="onFolderModeChange()" />
-            <div class="radio-card-body">
-              <div class="radio-title">
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4l2 2h6a2 2 0 012 2v1H8a3 3 0 00-3 3v1.5a1.5 1.5 0 01-3 0V6z" clip-rule="evenodd"/><path d="M6 12a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4z"/></svg>
-                Custom folder path
-              </div>
-              <div class="radio-desc">Enter any absolute path accessible on this machine</div>
-            </div>
-            <div class="radio-dot"></div>
-          </label>
-        </div>
-
-        <div id="custom-path-row" class="path-input-row" style="display:none;">
+        <p style="margin-bottom:12px; font-size:0.875rem; color:#64748b;">Enter the absolute path to your dataset folder on this machine.</p>
+        <div id="custom-path-row" class="path-input-row">
           <div class="input-with-btn">
             <input type="text" id="folder-path" class="text-input" placeholder="e.g. C:\Users\you\my_dataset" onkeydown="if(event.key==='Enter') previewFolder()" />
             <button class="btn btn-secondary" onclick="previewFolder()">Preview Classes</button>
